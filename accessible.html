@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Accessible Journey - Meteor Madness</title>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <style>
+        body {
+            background-color: #000000;
+            color: #ffffff;
+            font-family: 'Verdana', sans-serif;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        main {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        section {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 2px solid #555;
+            border-radius: 8px;
+        }
+        h1, h2 {
+            color: #ffff00; /* High-contrast yellow for headings */
+            font-family: 'Arial', sans-serif;
+        }
+        a {
+            color: #33ccff; /* High-contrast cyan for links */
+            font-weight: bold;
+            text-decoration: underline;
+        }
+        a:hover, a:focus {
+            color: #99eeff;
+        }
+        button, a.button-link {
+            display: inline-block;
+            background-color: transparent;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            padding: 12px 24px;
+            margin: 10px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+        button:hover, button:focus, a.button-link:hover, a.button-link:focus {
+            background-color: #333;
+            outline: 3px solid #ffff00;
+        }
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+        .read-aloud-btn {
+            padding: 8px 12px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        .quiz-option {
+            margin: 5px;
+        }
+        .feedback {
+            font-weight: bold;
+            padding: 1rem;
+            margin-top: 1rem;
+            border-radius: 4px;
+        }
+        .feedback-correct {
+            background-color: #003300;
+            border: 1px solid #00ff00;
+            color: #00ff00;
+        }
+        .feedback-incorrect {
+            background-color: #330000;
+            border: 1px solid #ff0000;
+            color: #ff9999;
+        }
+        img {
+            max-width: 200px;
+            height: auto;
+            float: right;
+            margin-left: 1rem;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+    <main id="main-content">
+        <div id="controls">
+            <h1>Meteor Madness: An Accessible Journey</h1>
+            <p>Welcome, Trainee! This is a screen-reader and keyboard-friendly version of the Meteor Madness story. Use the "Read Aloud" buttons to have the text narrated.</p>
+            
+            <button id="save-pdf-btn">📄 Save as PDF</button>
+            <p id="return-link"><a href="/landingpage.html">Return to Main Landing Page</a></p>
+        </div>
+
+        <section id="welcome-section" aria-labelledby="welcome-heading">
+            <h2 id="welcome-heading">Chapter 1: The Mission Briefing</h2>
+            <button class="read-aloud-btn" data-section="welcome-section">🔊 Read Aloud</button>
+            <div class="content">
+                <img src="image.png" alt="Alice, the mission guide, smiling.">
+                <p>"Greetings, Trainee! I'm Alice. Welcome to your mission briefing. Our goal is to understand the threat of near-Earth objects, or NEOs, like asteroids, and learn how we can protect our planet."</p>
+                <p>"Are you ready to begin?"</p>
+            </div>
+        </section>
+
+        <section id="orbit-section" aria-labelledby="orbit-heading">
+            <h2 id="orbit-heading">Chapter 2: Understanding the Orbit</h2>
+            <button class="read-aloud-btn" data-section="orbit-section">🔊 Read Aloud</button>
+            <div class="content">
+                <p>"Excellent! Every near-Earth object follows a specific path, or orbit. Understanding this orbit is the first step in predicting a potential impact."</p>
+                <p>Your team has prepared a detailed visualization of the asteroid's orbit. You can view it here:</p>
+                <a href="/public/orbit-position.html" target="_blank" class="button-link">Visualize Orbit</a>
+            </div>
+        </section>
+
+        <section id="location-section" aria-labelledby="location-heading">
+            <h2 id="location-heading">Chapter 3: Predicting the Impact Zone</h2>
+            <button class="read-aloud-btn" data-section="location-section">🔊 Read Aloud</button>
+            <div class="content">
+                <p>"Now that we know its path, we can predict where it might strike if it were on a collision course. These potential areas are called impact corridors."</p>
+                <p>Explore the data on potential impact zones:</p>
+                <a href="location.html" target="_blank" class="button-link">Explore Impact Zones</a>
+            </div>
+        </section>
+
+        <section id="area-section" aria-labelledby="area-heading">
+            <h2 id="area-heading">Chapter 4: Analyzing the Effects</h2>
+            <button class="read-aloud-btn" data-section="area-section">🔊 Read Aloud</button>
+            <div class="content">
+                <p>"An impact's effect depends on the asteroid's size and speed. Even small asteroids can release enormous energy. Before you check the impact, let's check your knowledge."</p>
+                <a href="area.html" target="_blank" class="button-link">Analyze Area & Intensity </a>
+                
+                <div id="quiz-area" role="group" aria-labelledby="quiz-question">
+                    <p id="quiz-question" style="font-weight: bold; margin-top: 1.5rem;">Knowledge Check: Which of these famous events was caused by a massive asteroid impact?</p>
+                    <button class="quiz-option" data-correct="true">The Extinction of the Dinosaurs</button>
+                    <button class="quiz-option" data-correct="false">The 1908 Tunguska Event</button>
+                </div>
+                <div id="quiz-feedback-area" class="feedback" role="alert" aria-live="assertive"></div>
+            </div>
+        </section>
+
+        <section id="prevention-section" aria-labelledby="prevention-heading">
+            <h2 id="prevention-heading">Chapter 5: Planetary Defense</h2>
+            <button class="read-aloud-btn" data-section="prevention-section">🔊 Read Aloud</button>
+            <div class="content">
+                <p>"Good work. Now, let's see how we can stop it. NASA and other space agencies are developing methods to deflect asteroids."</p>
+                <p>Which of the following is a proven method tested by NASA's DART mission?</p>
+                <div id="quiz-prevention" role="group" aria-labelledby="prevention-question">
+                    <p id="prevention-question" style="font-weight: bold; margin-top: 1.5rem;">Select the correct deflection technique:</p>
+                    <button class="prevention-option" data-correct="false">Attaching rockets to the asteroid</button>
+                    <button class="prevention-option" data-correct="true">Crashing a spacecraft into it (Kinetic Impactor)</button>
+                    <button class="prevention-option" data-correct="false">Using a giant space net</button>
+                </div>
+                <div id="prevention-feedback-area" class="feedback" role="alert" aria-live="assertive"></div>
+                <a href="/preventivemeasures.html" target="_blank" class="button-link">Learn More about Deflection</a>
+            </div>
+        </section>
+
+        <section id="conclusion-section" aria-labelledby="conclusion-heading">
+            <h2 id="conclusion-heading">Chapter 6: Mission Accomplished</h2>
+            <button class="read-aloud-btn" data-section="conclusion-section">🔊 Read Aloud</button>
+            <div class="content">
+                <p>"Mission accomplished, Trainee! Thank you for completing your training. You've learned how we track, predict, and plan to mitigate asteroid threats. Planetary defense is a global effort, and your awareness is a key part of it."</p>
+                <p>Congratulations!</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // --- NEW: Save as PDF Functionality using jsPDF and html2canvas ---
+            const savePdfBtn = document.getElementById('save-pdf-btn');
+            savePdfBtn.addEventListener('click', function() {
+                savePdfBtn.textContent = 'Generating PDF...';
+                savePdfBtn.disabled = true;
+
+                const { jsPDF } = window.jspdf;
+                const contentToCapture = document.getElementById('main-content');
+                
+                // Hide interactive buttons before capture
+                const buttonsToHide = contentToCapture.querySelectorAll('button, a.button-link, #return-link');
+                buttonsToHide.forEach(btn => btn.style.display = 'none');
+
+                html2canvas(contentToCapture, {
+                    scale: 2, // Higher resolution for better quality
+                    backgroundColor: '#000000', // Ensure black background is captured
+                    useCORS: true 
+                }).then(canvas => {
+                    // Show buttons again after capture
+                    buttonsToHide.forEach(btn => btn.style.display = 'inline-block');
+
+                    const imgData = canvas.toDataURL('image/png');
+                    const pdf = new jsPDF('p', 'mm', 'a4');
+                    const pdfWidth = pdf.internal.pageSize.getWidth();
+                    const pdfHeight = pdf.internal.pageSize.getHeight();
+                    const canvasWidth = canvas.width;
+                    const canvasHeight = canvas.height;
+                    const ratio = canvasWidth / pdfWidth;
+                    const imgHeight = canvasHeight / ratio;
+                    
+                    let heightLeft = imgHeight;
+                    let position = 0;
+
+                    pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                    heightLeft -= pdfHeight;
+
+                    while (heightLeft > 0) {
+                        position = heightLeft - imgHeight;
+                        pdf.addPage();
+                        pdf.addImage(imgData, 'PNG', 0, position, pdfWidth, imgHeight);
+                        heightLeft -= pdfHeight;
+                    }
+
+                    pdf.save('Meteor_Madness_Accessible_Journey.pdf');
+                    
+                    savePdfBtn.textContent = '📄 Save as PDF';
+                    savePdfBtn.disabled = false;
+                }).catch(err => {
+                    console.error("PDF Generation failed:", err);
+                    // Reset button state even if it fails
+                    buttonsToHide.forEach(btn => btn.style.display = 'inline-block');
+                    savePdfBtn.textContent = '📄 Save as PDF';
+                    savePdfBtn.disabled = false;
+                });
+            });
+
+            // --- Text-to-Speech Functionality ---
+            const readAloudButtons = document.querySelectorAll('.read-aloud-btn');
+            readAloudButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    window.speechSynthesis.cancel();
+                    const sectionId = this.getAttribute('data-section');
+                    const contentDiv = document.querySelector(`#${sectionId} .content`);
+                    const textToRead = contentDiv.innerText;
+                    const utterance = new SpeechSynthesisUtterance(textToRead);
+                    utterance.lang = 'en-US';
+                    window.speechSynthesis.speak(utterance);
+                });
+            });
+
+            // --- Quiz 1: Impact Area ---
+            const quizOptions = document.querySelectorAll('#quiz-area .quiz-option');
+            const quizFeedback = document.getElementById('quiz-feedback-area');
+            quizOptions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const isCorrect = this.getAttribute('data-correct') === 'true';
+                    if (isCorrect) {
+                        quizFeedback.textContent = "Correct! The Chicxulub impactor event led to a mass extinction 66 million years ago.";
+                        quizFeedback.className = 'feedback feedback-correct';
+                    } else {
+                        quizFeedback.textContent = "Incorrect. The Tunguska event was a massive meteor air burst, but it did not create an impact crater like the one that led to the dinosaurs' extinction.";
+                        quizFeedback.className = 'feedback feedback-incorrect';
+                    }
+                    quizOptions.forEach(btn => btn.disabled = true);
+                });
+            });
+
+            // --- Quiz 2: Prevention Method ---
+            const preventionOptions = document.querySelectorAll('#quiz-prevention .prevention-option');
+            const preventionFeedback = document.getElementById('prevention-feedback-area');
+            preventionOptions.forEach(button => {
+                button.addEventListener('click', function() {
+                    const isCorrect = this.getAttribute('data-correct') === 'true';
+                    if (isCorrect) {
+                        preventionFeedback.textContent = "Correct! The DART mission successfully demonstrated that a kinetic impactor can alter an asteroid's path.";
+                        preventionFeedback.className = 'feedback feedback-correct';
+                    } else {
+                        preventionFeedback.textContent = "Incorrect. While other ideas exist, the kinetic impactor is the method that has been successfully tested in space.";
+                        preventionFeedback.className = 'feedback feedback-incorrect';
+                    }
+                    preventionOptions.forEach(btn => btn.disabled = true);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

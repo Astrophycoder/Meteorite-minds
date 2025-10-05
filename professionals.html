@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professionals - Analysis Modules</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Rajdhani', sans-serif; margin: 0; padding: 0; overflow-y: auto; background-color: #0c1427; }
+        #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        .title-glow { text-shadow: 0 0 8px rgba(0, 186, 255, 0.7); }
+        .btn { display: inline-block; width: 100%; text-align: center; margin-top: auto; padding: 10px 20px; border-radius: 8px; border: 2px solid #00baff; color: #00baff; background: rgba(0, 20, 40, 0.4); text-transform: uppercase; font-family: 'Orbitron', sans-serif; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0 12px rgba(0, 186, 255, 0.3); }
+        .btn:hover { background: rgba(0, 60, 100, 0.6); box-shadow: 0 0 18px #00baff, inset 0 0 8px #0077ff; }
+        .content-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 1rem; box-shadow: 0 0 25px rgba(56, 189, 248, 0.1); transition: all 0.3s ease; }
+        .content-card:hover { transform: translateY(-5px); border-color: rgba(56, 189, 248, 0.7); box-shadow: 0 0 35px rgba(56, 189, 248, 0.2); }
+    </style>
+</head>
+<body class="text-white">
+    <canvas id="bg-canvas"></canvas>
+    <header class="sticky top-0 z-50 bg-slate-900/50 backdrop-blur-md border-b border-sky-500/20">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <h1 class="text-2xl font-bold text-sky-300 font-['Orbitron'] tracking-widest title-glow">Professional Path</h1>
+                <a href="/landingpage.html" class="text-sky-400 hover:text-sky-200 transition-colors text-lg">&larr; Back to Home</a>
+            </div>
+        </div>
+    </header>
+    <main class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl font-bold uppercase tracking-wider">Analysis Modules</h2>
+            <p class="mt-2 text-lg text-slate-400">Select a module to access data-driven tools and simulations.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div class="content-card p-6 flex flex-col">
+                <h3 class="text-2xl font-['Orbitron'] font-bold text-sky-400 mb-3 title-glow">1. Position of Asteroid</h3>
+                <p class="text-slate-300 mb-6 flex-grow">Access real-time orbital data from NASA's JPL database and visualize asteroid orbits in 3D.</p>
+                <a href="/public/orbit-position.html"><button class="btn">Launch Tool</button></a>
+            </div>
+            <div class="content-card p-6 flex flex-col">
+                <h3 class="text-2xl font-['Orbitron'] font-bold text-sky-400 mb-3 title-glow">2. Impact Location</h3>
+                <p class="text-slate-300 mb-6 flex-grow">Analyze impact corridors and review geological and population data for potential ground-zero zones.</p>
+                <a href="location.html"><button class="btn">Launch Tool</button></a>
+            </div>
+            <div class="content-card p-6 flex flex-col">
+                <h3 class="text-2xl font-['Orbitron'] font-bold text-sky-400 mb-3 title-glow">3. Impact Area & Intensity</h3>
+                <p class="text-slate-300 mb-6 flex-grow">Simulate blast radius, energy release in megatons, and seismic effects based on asteroid parameters.</p>
+                <a href="area.html"><button class="btn">Launch Tool</button></a>
+            </div>
+            <div class="content-card p-6 flex flex-col">
+                <h3 class="text-2xl font-['Orbitron'] font-bold text-sky-400 mb-3 title-glow">4. Preventive Measures</h3>
+                <p class="text-slate-300 mb-6 flex-grow">Evaluate mission parameters for various deflection techniques, including kinetic impactors.</p>
+                <a href="/preventivemeasures.html"><button class="btn">Launch Tool</button></a>
+            </div>
+        </div>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // Reusing the same starfield script
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('bg-canvas'), antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.position.z = 5;
+        const starVertices = [];
+        for (let i = 0; i < 10000; i++) { const x = (Math.random() - 0.5) * 2000; const y = (Math.random() - 0.5) * 2000; const z = Math.random() * -1000; starVertices.push(x, y, z); }
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute('position', new THREE.Float32BufferAttribute(starVertices, 3));
+        const starMaterial = new THREE.PointsMaterial({ color: 0xffffff, size: 0.5 + Math.random() });
+        const stars = new THREE.Points(starGeometry, starMaterial);
+        scene.add(stars);
+        function animate() { requestAnimationFrame(animate); stars.rotation.z += 0.0001; renderer.render(scene, camera); }
+        animate();
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+    </script>
+</body>
+</html>

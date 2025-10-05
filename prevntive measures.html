@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meteor Safety Storyboard — NASA 2025 Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: radial-gradient(circle at 20% 20%, #0a192f 0%, #010b16 100%);
+      --card: rgba(15, 23, 42, 0.5);
+      --muted: #94a3b8;
+      --accent: #00baff;
+      --maxw: 980px;
+      --border: rgba(56, 189, 248, 0.3);
+    }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', sans-serif;
+      line-height: 1.45;
+      color: #e2e8f0;
+      background: var(--bg);
+      background-attachment: fixed;
+      margin: 0;
+      padding: 32px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+    .wrap { width: 100%; max-width: var(--maxw); }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(56,189,248,0.2);
+      padding-bottom: 10px;
+    }
+    h1 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.4rem;
+      margin: 0;
+      color: #38bdf8;
+      letter-spacing: 1px;
+      text-shadow: 0 0 8px rgba(0,186,255,0.7);
+    }
+    .controls { display: flex; gap: 12px; align-items: center; }
+    select, .btn {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: rgba(10, 25, 47, 0.8);
+      color: #e0f2fe;
+      font-family: inherit;
+      font-size: 0.9rem;
+    }
+    .btn {
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    .btn:hover {
+        border-color: var(--accent);
+        background: rgba(10, 25, 47, 1);
+    }
+    select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 8px var(--accent);
+    }
+    .key-hint {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-style: italic;
+    }
+    .intro {
+      background: var(--card);
+      backdrop-filter: blur(10px);
+      padding: 18px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      box-shadow: 0 0 25px rgba(56,189,248,0.08);
+      margin-bottom: 20px;
+      color: var(--muted);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(56,189,248,0.1);
+      display: flex;
+      flex-direction: column;
+      transition: all 0.3s ease;
+      padding: 14px;
+      cursor: pointer;
+    }
+    .card:hover {
+      border-color: rgba(56,189,248,0.7);
+      box-shadow: 0 0 30px rgba(56,189,248,0.2);
+      transform: translateY(-4px);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      opacity: 0.9;
+    }
+    .step {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+      text-shadow: 0 0 6px rgba(0,186,255,0.5);
+    }
+    p {
+      margin: 0 0 10px 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+    footer {
+      margin-top: 24px;
+      color: #64748b;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+    /* Astronaut NPC */
+    .npc {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      display: flex;
+      align-items: flex-end;
+      z-index: 1000;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .npc.hidden {
+      opacity: 0;
+      transform: scale(0.9);
+      pointer-events: none;
+    }
+    .npc img {
+      width: 90px;
+      height: auto;
+      animation: float 4s ease-in-out infinite;
+      filter: drop-shadow(0 0 10px rgba(56,189,248,0.5));
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    .speech-bubble {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      border-radius: 12px;
+      color: #e0f2fe;
+      max-width: 260px;
+      margin-right: 10px;
+      box-shadow: 0 0 15px rgba(56,189,248,0.2);
+      font-size: 0.9rem;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.4s ease;
+    }
+    .speech-bubble.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media print {
+      body { padding: 0; background: white; color: black; }
+      header .controls, .npc, .key-hint { display: none; }
+      .card img { height: 120px; }
+      .card, .intro { background: white; color: black; border: 1px solid #ccc; box-shadow: none; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap" role="main">
+    <header>
+      <h1 id="title">Meteor Impact: Preventive Measures — NASA 2025 Storyboard</h1>
+      <div class="controls">
+        <span class="key-hint">Press Shift / Tap to toggle voice guide</span>
+        <label for="langSel" class="sr-only">Select language</label>
+        <select id="langSel" aria-label="Language selector">
+          <option value="en">English</option>
+          <option value="es">Español</option>
+          <option value="fr">Français</option>
+          <option value="hi">हिन्दी</option>
+        </select>
+        <button class="btn" id="printBtn">Print / Save PDF</button>
+      </div>
+    </header>
+
+    <section class="intro" id="intro" tabindex="0" aria-labelledby="title">
+      <p id="introText">This NASA 2025 storyboard explains clear, practical steps for people and communities if a meteor or asteroid impact threat is identified. These actions are based on guidance from NASA’s Planetary Defense Coordination Office (PDCO) and U.S. emergency agencies.</p>
+    </section>
+
+    <section class="grid" id="storyboard">
+      <article class="card" id="step-1">
+        <img src="asteroid-threat-awareness-nasa.jpg" alt="Asteroid approaching Earth"/>
+        <div class="step">1. Stay Informed</div>
+        <p id="s1">Follow NASA’s Planetary Defense Coordination Office for verified asteroid and meteor information...</p>
+      </article>
+
+      <article class="card" id="step-2">
+        <img src="emergency-preparedness-kit.jpg" alt="Emergency preparedness kit"/>
+        <div class="step">2. Prepare an Emergency Kit</div>
+        <p id="s2">Have a kit ready with three days of supplies — water, non-perishable food...</p>
+      </article>
+
+      <article class="card" id="step-3">
+        <img src="community-evacuation-shelter.jpg" alt="Community emergency shelter"/>
+        <div class="step">3. Follow Evacuation or Shelter Instructions</div>
+        <p id="s3">If authorities issue evacuation orders, leave quickly and safely...</p>
+      </article>
+
+      <article class="card" id="step-4">
+        <img src="nasa-impact-dust-simulation.jpg" alt="Dust and blast effects from asteroid impact"/>
+        <div class="step">4. Protect from Blast and Dust</div>
+        <p id="s4">Meteor impacts can produce strong shock waves and heavy dust...</p>
+      </article>
+
+      <article class="card" id="step-5">
+        <img src="nasa-community-response-team.jpg" alt="Community volunteers coordinating response"/>
+        <div class="step">5. Community Plans and Communication</div>
+        <p id="s5">Local governments will organize response and shelters...</p>
+      </article>
+
+      <article class="card" id="step-6">
+        <img src="asteroid-impact-site-crater.jpg" alt="Asteroid impact crater"/>
+        <div class="step">6. Avoid Impact Sites After Event</div>
+        <p id="s6">Stay away from the impact site after an event...</p>
+      </article>
+    </section>
+
+    <footer>
+      <div id="notes">Images and data © NASA (public domain). Sources: NASA PDCO, NASA Science, FEMA, Ready.gov. Updated 2025.</div>
+    </footer>
+  </div>
+
+  <div class="npc" id="npc">
+    <div class="speech-bubble" id="npcSpeech">👩‍🚀 Ready to guide you through NASA’s safety steps!</div>
+    <img src="astronaut-character.png" alt="Astronaut character"/>
+  </div>
+
+  <script>
+    // Print button
+    document.getElementById('printBtn').addEventListener('click',()=>window.print());
+
+    // NPC logic
+    const npc = document.getElementById('npc');
+    const npcSpeech = document.getElementById('npcSpeech');
+    const synth = window.speechSynthesis;
+    let npcEnabled = true;
+    let currentLang = "en";
+    let voices = [];
+
+    function loadVoices() { voices = synth.getVoices(); }
+    loadVoices();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+      speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function speak(text){
+      if(!npcEnabled) return;
+      if(synth.speaking) synth.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+
+      const langMap = { en:"en", es:"es", fr:"fr", hi:"hi" };
+      const langCode = langMap[currentLang] || "en";
+      utter.lang = langCode;
+
+      const voice = voices.find(v => v.lang.toLowerCase().startsWith(langCode));
+      if (voice) utter.voice = voice;
+
+      utter.pitch = 1; utter.rate = 1;
+      synth.speak(utter);
+    }
+
+    function npcSay(text){
+      if(!npcEnabled) return;
+      npcSpeech.textContent = "👩‍🚀 " + text;
+      npcSpeech.classList.add('show');
+      speak(text);
+      clearTimeout(npcSpeech.timer);
+      npcSpeech.timer = setTimeout(()=>npcSpeech.classList.remove('show'), 9000);
+    }
+
+    document.querySelectorAll('.card').forEach(card=>{
+      card.addEventListener('mouseenter', ()=>{
+        const text = card.querySelector('p').textContent;
+        npcSay(text);
+      });
+      card.addEventListener('focus', ()=>{
+        const text = card.querySelector('p').textContent;
+        npcSay(text);
+      });
+    });
+
+    function toggleNPC() {
+      npcEnabled = !npcEnabled;
+      npc.classList.toggle('hidden', !npcEnabled);
+      if(!npcEnabled){
+        synth.cancel();
+      } else {
+        npcSay("NPC reactivated. I'm ready to assist again!");
+      }
+    }
+    document.addEventListener('keydown', e=>{ if(e.key === 'Shift') toggleNPC(); });
+    document.addEventListener('touchstart', e=>{ if(e.touches.length === 1){ toggleNPC(); } });
+
+    // ---------------- MULTILANGUAGE ----------------
+    const translations = {
+      en: {
+        title: "Meteor Impact: Preventive Measures — NASA 2025 Storyboard",
+        intro: "This NASA 2025 storyboard explains clear, practical steps...",
+        s1: "Follow NASA’s Planetary Defense Coordination Office for verified asteroid...",
+        s2: "Have a kit ready with three days of supplies...",
+        s3: "If authorities issue evacuation orders, leave quickly and safely...",
+        s4: "Meteor impacts can produce strong shock waves and heavy dust...",
+        s5: "Local governments will organize response and shelters...",
+        s6: "Stay away from the impact site after an event..."
+      },
+      es: {
+        title: "Impacto de Meteorito: Medidas Preventivas — NASA 2025 Storyboard",
+        intro: "Este guion gráfico de la NASA 2025 explica pasos claros...",
+        s1: "Siga la Oficina de Coordinación de Defensa Planetaria de la NASA...",
+        s2: "Tenga un kit listo con suministros para tres días...",
+        s3: "Si las autoridades emiten órdenes de evacuación...",
+        s4: "Los impactos de meteoros pueden producir fuertes ondas de choque...",
+        s5: "Los gobiernos locales organizarán la respuesta...",
+        s6: "Manténgase alejado del sitio de impacto después de un evento..."
+      },
+      fr: {
+        title: "Impact de Météorite : Mesures Préventives — NASA 2025 Storyboard",
+        intro: "Ce storyboard de la NASA 2025 explique des étapes claires...",
+        s1: "Suivez le Bureau de coordination de la défense planétaire de la NASA...",
+        s2: "Préparez un kit avec trois jours de fournitures...",
+        s3: "Si les autorités émettent un ordre d'évacuation...",
+        s4: "Les impacts de météores peuvent produire de fortes ondes de choc...",
+        s5: "Les gouvernements locaux organiseront la réponse...",
+        s6: "Éloignez-vous du site d'impact après un événement..."
+      },
+      hi: {
+        title: "उल्का टकराव: रोकथाम के उपाय — नासा 2025 स्टोरीबोर्ड",
+        intro: "यह नासा 2025 स्टोरीबोर्ड स्पष्ट और व्यावहारिक कदम बताता है...",
+        s1: "क्षुद्रग्रह और उल्का पिंडों की प्रमाणित जानकारी के लिए...",
+        s2: "तीन दिनों का आपूर्ति किट तैयार रखें...",
+        s3: "यदि प्राधिकरण निकासी आदेश जारी करते हैं...",
+        s4: "उल्का टकराव से तेज़ झटके और भारी धूल उत्पन्न हो सकती है...",
+        s5: "स्थानीय सरकारें प्रतिक्रिया और आश्रयों का आयोजन करेंगी...",
+        s6: "घटना के बाद प्रभाव स्थल से दूर रहें..."
+      }
+    };
+
+    const langSel = document.getElementById("langSel");
+    langSel.addEventListener("change", () => {
+      currentLang = langSel.value;
+      const t = translations[currentLang];
+      document.getElementById("title").textContent = t.title;
+      document.getElementById("introText").textContent = t.intro;
+      document.getElementById("s1").textContent = t.s1;
+      document.getElementById("s2").textContent = t.s2;
+      document.getElementById("s3").textContent = t.s3;
+      document.getElementById("s4").textContent = t.s4;
+      document.getElementById("s5").textContent = t.s5;
+      document.getElementById("s6").textContent = t.s6;
+    });
+  </script>
+</body>
+</html>
