@@ -3,14 +3,18 @@ body {
     margin: 0;
     padding: 0;
     overflow: hidden;
+    background-color: #0a0a1a;
 }
 
-#bg-canvas {
+#bg-canvas, #orbit-canvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+}
+
+#bg-canvas {
     z-index: -1;
 }
 
@@ -26,74 +30,20 @@ body {
 }
 
 .screen.active {
-    display: flex;
+    display: block; /* Use block instead of flex if not needed for direct children */
     opacity: 1;
 }
 
-.typing-cursor {
-    display: inline-block;
-    width: 8px;
-    height: 1.2em;
-    background-color: white;
-    animation: blink 0.7s infinite;
-    margin-left: 4px;
-}
-
-@keyframes blink {
-    0%, 100% { 
-        opacity: 1; 
-    }
-    50% { 
-        opacity: 0; 
-    }
-}
-
 .dialog-box {
-    position: relative;
     background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(56, 189, 248, 0.4);
     border-radius: 1rem;
     box-shadow: 0 0 25px rgba(56, 189, 248, 0.2);
+    box-sizing: border-box; /* Ensure padding doesn't add to width */
 }
 
-.dialog-box::after {
-    content: '';
-    position: absolute;
-    bottom: -20px;
-    right: 25%;
-    width: 0;
-    height: 0;
-    border: 20px solid transparent;
-    border-top-color: rgba(56, 189, 248, 0.4);
-    border-bottom: 0;
-    border-left: 0;
-    transform: rotate(-15deg);
-}
-
-.glow-button {
-    box-shadow: 0 0 5px #0ea5e9, 0 0 15px #0ea5e9, 0 0 25px #0ea5e9;
-    transition: all 0.3s ease;
-}
-
-.glow-button:hover {
-    box-shadow: 0 0 10px #38bdf8, 0 0 25px #38bdf8, 0 0 40px #38bdf8;
-    transform: scale(1.05);
-}
-
-/* Main Screen */
-#main-screen {
-    flex-direction: column;
-}
-
-#orbit-canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
+/* --- Desktop Styles --- */
 .info-panel {
     position: absolute;
     top: 20px;
@@ -101,31 +51,6 @@ body {
     width: 320px;
     padding: 1.5rem;
     color: white;
-}
-
-.info-title {
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    color: #38bdf8;
-}
-
-.info-item {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-}
-
-.info-label {
-    font-size: 0.85rem;
-    color: rgba(255, 255, 255, 0.6);
-    margin-bottom: 0.25rem;
-}
-
-.info-value {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: #38bdf8;
 }
 
 .controls {
@@ -139,6 +64,29 @@ body {
     justify-content: center;
 }
 
+/* --- Shared Component Styles --- */
+.info-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #38bdf8;
+}
+.info-item {
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+.info-item:last-child { border-bottom: none; }
+.info-label {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    margin-bottom: 0.25rem;
+}
+.info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #38bdf8;
+}
 .control-btn {
     background: rgba(15, 23, 42, 0.8);
     backdrop-filter: blur(10px);
@@ -151,22 +99,80 @@ body {
     font-weight: 600;
     transition: all 0.3s ease;
 }
-
 .control-btn:hover {
     background: rgba(56, 189, 248, 0.2);
     border-color: #38bdf8;
 }
+.glow-button {
+    box-shadow: 0 0 5px #0ea5e9, 0 0 15px #0ea5e9, 0 0 25px #0ea5e9;
+}
 
-.asteroid-label {
-    position: absolute;
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    background: rgba(15, 23, 42, 0.9);
-    border: 1px solid rgba(56, 189, 248, 0.6);
-    border-radius: 20px;
-    pointer-events: none;
-    white-space: nowrap;
+/* --- Search Modal Styles --- */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 999;
+}
+.modal {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%); z-index: 1000;
+    width: 90%; max-width: 400px;
+}
+.search-dialog-box { padding: 2rem; }
+.search-title { color: #38bdf8; margin-top: 0; margin-bottom: 1.5rem; }
+.search-input {
+    width: 100%; padding: 0.75rem; border-radius: 8px;
+    border: 1px solid rgba(56, 189, 248, 0.4); background: rgba(15, 23, 42, 0.6);
+    color: white; font-size: 1rem; margin-bottom: 1rem; box-sizing: border-box;
+}
+.search-status-text { color: #38bdf8; margin-bottom: 1.5rem; min-height: 20px; font-size: 0.9rem; }
+.search-buttons { display: flex; gap: 1rem; }
+.search-buttons .control-btn { flex: 1; }
 
+/* =================================== */
+/* ===== RESPONSIVE STYLES START ===== */
+/* =================================== */
+
+/* For tablets and smaller devices */
+@media (max-width: 768px) {
+    .info-panel {
+        /* Change from a side panel to a top banner */
+        width: auto; /* Allow width to be flexible */
+        top: 10px;
+        left: 10px;
+        right: 10px; /* Pin to both left and right edges */
+        padding: 1rem;
+    }
+
+    .controls {
+        /* Ensure the container doesn't overflow */
+        width: 100%; 
+        bottom: 15px;
+        padding: 0 10px; /* Add padding to prevent buttons from touching the edge */
+        box-sizing: border-box;
+    }
+}
+
+/* For small mobile phones */
+@media (max-width: 480px) {
+    .info-title { font-size: 1.25rem; }
+    .info-item { margin-bottom: 0.5rem; padding-bottom: 0.5rem; }
+    .info-label { font-size: 0.8rem; }
+    .info-value { font-size: 1rem; }
+
+    .controls {
+        /* Stack buttons vertically for easier tapping */
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+        bottom: 10px;
+    }
+
+    .control-btn {
+        /* Make stacked buttons take up a consistent width */
+        width: 80%;
+        max-width: 300px;
+        text-align: center;
+        padding: 0.7rem 1rem;
+        font-size: 0.9rem;
+    }
 }
