@@ -96,7 +96,7 @@
             <div class="w-1/2 max-w-xs md:w-1/3 md:max-w-sm"><img src="image.png" alt="Alice"></div>
             <div class="w-full md:w-2/3 flex flex-col items-center md:items-start gap-4">
                 <div class="dialog-box p-6 w-full"><p id="dialog-2" class="text-lg md:text-xl lg:text-2xl leading-relaxed"></p></div>
-                <a href="/public/orbit-position.html" target="_blank"><button id="position-button" class="btn opacity-0 invisible">Visualize Orbit</button></a>
+                <a href="public/orbit-position.html" target="_blank"><button id="position-button" class="btn opacity-0 invisible">Visualize Orbit</button></a>
                 <div id="info-box-orbit" class="info-box opacity-0 invisible w-full"><p><strong>Did you know?</strong> Asteroid orbits can be slightly changed by the gravity of giant planets like Jupiter! This is called gravitational perturbation.</p></div>
             </div>
         </div>
@@ -107,7 +107,7 @@
             <div class="w-1/2 max-w-xs md:w-1/3 md:max-w-sm"><img src="image.png" alt="Alice"></div>
             <div class="w-full md:w-2/3 flex flex-col items-center md:items-start gap-6">
                 <div class="dialog-box p-6 w-full"><p id="dialog-3" class="text-lg md:text-xl lg:text-2xl leading-relaxed"></p></div>
-                <a href="location.html" target="_blank"><button id="location-button" class="btn opacity-0 invisible">Explore Impact Zones</button></a>
+                <a href="https://location-impact.vercel.app/" target="_blank"><button id="location-button" class="btn opacity-0 invisible">Explore Impact Zones</button></a>
             </div>
         </div>
     </div>
@@ -117,7 +117,7 @@
             <div class="w-1/2 max-w-xs md:w-1/3 md:max-w-sm"><img src="image.png" alt="Alice"></div>
             <div class="w-full md:w-2/3 flex flex-col items-center md:items-start gap-4">
                 <div class="dialog-box p-6 w-full"><p id="dialog-4" class="text-lg md:text-xl lg:text-2xl leading-relaxed"></p></div>
-                <a href="area.html" target="_blank"><button id="area-button" class="btn opacity-0 invisible">Analyze Area & Intensity</button></a>
+                <a href="https://33003d3c52c05d1403.gradio.live/?__theme=dark" target="_blank"><button id="area-button" class="btn opacity-0 invisible">Analyze Area & Intensity</button></a>
                 <div id="quiz-container" class="w-full opacity-0 invisible"></div>
             </div>
         </div>
@@ -139,7 +139,7 @@
                     </div>
                      <div id="game-feedback" class="text-center mt-2 h-6 font-semibold"></div>
                 </div>
-                <a href="/preventivemeasures.html" target="_blank"><button id="preventive-button" class="btn opacity-0 invisible">Learn More about Deflection</button></a>
+                <a href="preventivemeasures.html" target="_blank"><button id="preventive-button" class="btn opacity-0 invisible">Learn More about Deflection</button></a>
             </div>
         </div>
     </div>
@@ -282,9 +282,9 @@
         const dialogs = {
             1: { text: "Greetings, {{name}}! I'm Alice. Welcome to your mission briefing. Are you ready to begin?" },
             2: { text: "Excellent, {{name}}! Every near-Earth object follows a specific orbit. Understanding this path is our first priority. Click on the button below and search any number or name (if you know) to find the respective asteriod." },
-            3: { text: "With the orbit known, we can predict where it might strike. These are called impact corridors." },
-            4: { text: "The energy an impact releases is immense. You can explore the data, but first, a quick knowledge check for you, {{name}}!" },
-            5: { text: "Good work. Now, {{name}}, let's see how we can stop it. Drag the correct deflection tool onto the asteroid target." },
+            3: { text: "With the orbit known, we can predict where it might strike. These are called impact corridors. Click below to check the locations of various asteroids, its historical impact, potential hazardous ones, track them, and check the location for any asteriod." },
+            4: { text: "The energy an impact releases is immense. You can explore the impact by clicking the button below, but first, a quick knowledge check for you, {{name}}!" },
+            5: { text: "Good work. Now, {{name}}, let's see how we can stop it. Drag the correct deflection tool onto the asteroid target. Click below and give values to understand the impact and choose second option to see how we can prevent it." },
             6: { text: "Mission accomplished, {{name}}! Thank you for completing your training. Your awareness is a key part of planetary defense." }
         };
 
