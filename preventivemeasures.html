@@ -1,476 +1,470 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Impactor 2025 — Scenario Model & Consequence Predictor</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Impactor 2025 — Scenario Model & Consequence Predictor</title>
 
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@600&display=swap" rel="stylesheet">
 
-  <style>
-    :root{--glass-bg: rgba(15,23,42,0.55);--accent:#00baff}
-    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; margin:0; background:#071028; color:#e6f6ff}
-    .title-glow{text-shadow:0 0 8px rgba(0,186,255,0.7)}
-    .btn{padding:10px 18px;border-radius:10px;border:2px solid var(--accent);background:rgba(0,10,20,0.35);color:var(--accent);font-weight:700;cursor:pointer; transition: all 0.2s ease; text-decoration: none;}
-    .btn:hover{background:rgba(0,30,50,0.6); box-shadow: 0 0 12px var(--accent);}
-    .btn:disabled{opacity:0.4; cursor:not-allowed; box-shadow:none; background:rgba(0,10,20,0.35);}
-    .card{background:var(--glass-bg);border:1px solid rgba(56,189,248,0.18);border-radius:12px;padding:1.5rem}
-    .muted{color:#9fbcd8}
-    #viz { width:100%; height:300px; background: linear-gradient(180deg,#020617, #071728); border-radius:10px; display:block; }
-    .rec-item { padding-left: 1.25rem; position:relative; }
-    .rec-item::before { content: '»'; position: absolute; left: 0; color: var(--accent); }
-    .grid-2 { display:grid; grid-template-columns:1fr 420px; gap:1.5rem; }
-    @media(max-width:1024px){ .grid-2{grid-template-columns:1fr} }
-  </style>
+  <style>
+    :root{--glass-bg: rgba(15,23,42,0.55);--accent:#00baff}
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; margin:0; background:#071028; color:#e6f6ff}
+    .title-glow{text-shadow:0 0 8px rgba(0,186,255,0.7)}
+    .btn{padding:10px 18px;border-radius:10px;border:2px solid var(--accent);background:rgba(0,10,20,0.35);color:var(--accent);font-weight:700;cursor:pointer; transition: all 0.2s ease; text-decoration: none;}
+    .btn:hover{background:rgba(0,30,50,0.6); box-shadow: 0 0 12px var(--accent);}
+    .btn:disabled{opacity:0.4; cursor:not-allowed; box-shadow:none; background:rgba(0,10,20,0.35);}
+    .card{background:var(--glass-bg);border:1px solid rgba(56,189,248,0.18);border-radius:12px;padding:1.5rem}
+    .muted{color:#9fbcd8}
+    #viz { width:100%; height:300px; background: linear-gradient(180deg,#020617, #071728); border-radius:10px; display:block; }
+    .rec-item { padding-left: 1.25rem; position:relative; }
+    .rec-item::before { content: '»'; position: absolute; left: 0; color: var(--accent); }
+    .grid-2 { display:grid; grid-template-columns:1fr 420px; gap:1.5rem; }
+    @media(max-width:1024px){ .grid-2{grid-template-columns:1fr} }
+  </style>
 </head>
 <body>
-  <header class="sticky top-0 z-50 bg-slate-900/40 backdrop-blur-md border-b border-sky-500/10">
-    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-sky-300 font-['Orbitron'] tracking-wide title-glow">Impactor 2025 — Scenario Model & Consequence Predictor</h1>
-            <p class="muted mt-1">Interactive, citation-backed screening tool for modeling asteroid impacts & evaluating mitigation options.</p>
-        </div>
-        <div>
-            <a href="/prevntivemeasures.html" class="btn">Preventive Measures</a>
-        </div>
-    </div>
-  </header>
+  <header class="sticky top-0 z-50 bg-slate-900/40 backdrop-blur-md border-b border-sky-500/10">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+        <div>
+            <h1 class="text-2xl font-bold text-sky-300 font-['Orbitron'] tracking-wide title-glow">Impactor 2025 — Scenario Model & Consequence Predictor</h1>
+            <p class="muted mt-1">Interactive, citation-backed screening tool for modeling asteroid impacts & evaluating mitigation options.</p>
+        </div>
+    </div>
+  </header>
 
-  <main class="max-w-7xl mx-auto px-4 py-8">
-    <div class="grid-2">
-      <section class="space-y-6">
-        
-        <div class="card">
-          <h2 class="text-xl font-semibold text-sky-300">Input — Asteroid / Scenario</h2>
-          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label class="block text-sm font-medium">Diameter (meters)</label>
-              <input id="size" type="number" value="140" min="0.1" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Velocity (km/s)</label>
-              <input id="velocity" type="number" value="25" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block text-sm font-medium">Composition / Density</label>
-              <select id="composition" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
-                <option value="rocky" data-density="3000">Rocky / Stony (~3000 kg/m³)</option>
-                <option value="metallic" data-density="8000">Metallic / Iron (~8000 kg/m³)</option>
-                <option value="icy" data-density="1200">Icy / Volatile (~1200 kg/m³)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Entry angle (° from horizontal)</label>
-              <input id="angle" type="number" value="45" min="0" max="90" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Lead time before impact (days)</label>
-              <input id="leadTime" type="number" value="1825" min="0" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Impact environment</label>
-              <select id="environment" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
-                <option value="land">Land</option>
-                <option value="sea">Ocean</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-sm font-medium">Population density (people/km²)</label>
-              <input id="popDensity" type="number" value="1500" min="0" step="1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-            <div class="sm:col-span-2">
-              <label class="block text-sm font-medium">Location name (optional)</label>
-              <input id="locationName" type="text" placeholder="e.g., Mumbai metro area" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-            </div>
-          </div>
-          <div class="flex items-center gap-3 mt-6">
-            <button id="simulateBtn" class="btn">Run Analysis</button>
-            <button id="resetBtn" class="btn" style="opacity:0.85">Reset</button>
-          </div>
-          <p class="text-xs muted mt-4">Models adapted from Collins et al. (2005), Melosh/Purdue, and Rumpf et al. (2017).</p>
-        </div>
+  <main class="max-w-7xl mx-auto px-4 py-8">
+    <div class="grid-2">
+      <section class="space-y-6">
+        
+        <div class="card">
+          <h2 class="text-xl font-semibold text-sky-300">Input — Asteroid / Scenario</h2>
+          <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium">Diameter (meters)</label>
+              <input id="size" type="number" value="140" min="0.1" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Velocity (km/s)</label>
+              <input id="velocity" type="number" value="25" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium">Composition / Density</label>
+              <select id="composition" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
+                <option value="rocky" data-density="3000">Rocky / Stony (~3000 kg/m³)</option>
+                <option value="metallic" data-density="8000">Metallic / Iron (~8000 kg/m³)</option>
+                <option value="icy" data-density="1200">Icy / Volatile (~1200 kg/m³)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Entry angle (° from horizontal)</label>
+              <input id="angle" type="number" value="45" min="0" max="90" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Lead time before impact (days)</label>
+              <input id="leadTime" type="number" value="1825" min="0" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Impact environment</label>
+              <select id="environment" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
+                <option value="land">Land</option>
+                <option value="sea">Ocean</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-medium">Population density (people/km²)</label>
+              <input id="popDensity" type="number" value="1500" min="0" step="1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-sm font-medium">Location name (optional)</label>
+              <input id="locationName" type="text" placeholder="e.g., Mumbai metro area" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 mt-6">
+            <button id="simulateBtn" class="btn">Run Analysis</button>
+            <button id="resetBtn" class="btn" style="opacity:0.85">Reset</button>
+          </div>
+          <p class="text-xs muted mt-4">Models adapted from Collins et al. (2005), Melosh/Purdue, and Rumpf et al. (2017).</p>
+        </div>
 
-        <div class="card" id="mitigationCard">
-            <h2 class="text-xl font-semibold text-sky-300">Deflection Simulation</h2>
-            <div class="mt-4 space-y-4">
-                <div>
-                    <label class="block text-sm font-medium">Mitigation Method</label>
-                    <select id="mitigationMethod" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white" disabled>
-                        <option value="none">Select Method...</option>
-                        <option value="kineticImpactor">Kinetic Impactor</option>
-                    </select>
-                </div>
+        <div class="card" id="mitigationCard">
+            <h2 class="text-xl font-semibold text-sky-300">Deflection Simulation</h2>
+            <div class="mt-4 space-y-4">
+                <div>
+                    <label class="block text-sm font-medium">Mitigation Method</label>
+                    <select id="mitigationMethod" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white" disabled>
+                        <option value="none">Select Method...</option>
+                        <option value="kineticImpactor">Kinetic Impactor</option>
+                    </select>
+                </div>
 
-                <div id="kineticImpactorParams" class="hidden space-y-4">
-                    <p class="text-xs muted">Configure a mission to deflect the asteroid. Based on NASA's DART mission principles.</p>
-                    <div>
-                        <label class="block text-sm font-medium">Impactor Mass (kg)</label>
-                        <input id="impactorMass" type="number" value="600" min="100" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Impact Velocity (km/s, relative to asteroid)</label>
-                        <input id="impactorVelocity" type="number" value="6" min="1" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium">Momentum Enhancement (β Factor)</label>
-                        <select id="betaFactor" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
-                            <option value="3.5">Rubble Pile (High Ejecta, β ≈ 3.5)</option>
-                            <option value="1.5">Solid Rock (Medium Ejecta, β ≈ 1.5)</option>
-                            <option value="1.2">Metallic (Low Ejecta, β ≈ 1.2)</option>
-                        </select>
-                    </div>
-                    <button id="runMitigationBtn" class="btn w-full" disabled>Calculate Deflection</button>
-                </div>
-            </div>
-        </div>
+                <div id="kineticImpactorParams" class="hidden space-y-4">
+                    <p class="text-xs muted">Configure a mission to deflect the asteroid. Based on NASA's DART mission principles.</p>
+                    <div>
+                        <label class="block text-sm font-medium">Impactor Mass (kg)</label>
+                        <input id="impactorMass" type="number" value="600" min="100" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Impact Velocity (km/s, relative to asteroid)</label>
+                        <input id="impactorVelocity" type="number" value="6" min="1" step="0.1" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white"/>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium">Momentum Enhancement (β Factor)</label>
+                        <select id="betaFactor" class="w-full p-2 rounded bg-transparent border border-sky-500/20 text-white">
+                            <option value="3.5">Rubble Pile (High Ejecta, β ≈ 3.5)</option>
+                            <option value="1.5">Solid Rock (Medium Ejecta, β ≈ 1.5)</option>
+                            <option value="1.2">Metallic (Low Ejecta, β ≈ 1.2)</option>
+                        </select>
+                    </div>
+                    <button id="runMitigationBtn" class="btn w-full" disabled>Calculate Deflection</button>
+                </div>
+            </div>
+        </div>
 
-        <div id="recommendationsCard" class="card">
-          <h2 class="text-xl font-semibold text-sky-300">Mitigation & Response Strategy</h2>
-          <div class="mt-4">
-              <h3 class="text-lg font-semibold text-sky-400">General Planetary Defense Principles</h3>
-              <div id="generalInfo" class="mt-3 text-sm muted space-y-2">
-                  <p class="rec-item"><strong>Early Detection is Key:</strong> The most critical element is finding potentially hazardous asteroids years or decades before a potential impact.</p>
-                  <p class="rec-item"><strong>Characterization is Crucial:</strong> Understanding an asteroid's size, mass, composition, and rotation is vital for planning a successful deflection mission.</p>
-                  <p class="rec-item"><strong>International Cooperation:</strong> A credible impact threat is a global challenge that requires coordinated action from space agencies and governments worldwide.</p>
-              </div>
-          </div>
-          <hr class="border-sky-500/20 my-4">
-          <div class="mt-4">
-              <h3 class="text-lg font-semibold text-sky-400">Civil Defense & Public Safety Measures</h3>
-              <div id="publicSafetyInfo" class="mt-3 text-sm muted space-y-2">
-                  <p class="rec-item"><strong>Stay Informed:</strong> Follow instructions from official emergency management agencies.</p>
-                  <p class="rec-item"><strong>Emergency Kit:</strong> Maintain a disaster preparedness kit with water, food, first-aid, and necessary medications.</p>
-                  <p class="rec-item"><strong>Shelter vs. Evacuate:</strong> For distant impacts, evacuation may be ordered. For small airbursts, stay indoors, away from windows.</p>
-                  <p class="rec-item"><strong>Tsunami Risk:</strong> If an ocean impact is predicted, coastal areas may need to evacuate to higher ground.</p>
-              </div>
-          </div>
-          <div id="tailoredRecsContainer" class="mt-5 hidden">
-              <hr class="border-sky-500/20 my-4">
-              <h3 class="text-lg font-semibold text-sky-400">Tailored Recommendations for this Scenario</h3>
-              <div id="recList" class="mt-3 text-sm muted space-y-2"></div>
-          </div>
-        </div>
-      </section>
+        <div id="recommendationsCard" class="card">
+          <h2 class="text-xl font-semibold text-sky-300">Mitigation & Response Strategy</h2>
+          <div class="mt-4">
+              <h3 class="text-lg font-semibold text-sky-400">General Planetary Defense Principles</h3>
+              <div id="generalInfo" class="mt-3 text-sm muted space-y-2">
+                  <p class="rec-item"><strong>Early Detection is Key:</strong> The most critical element is finding potentially hazardous asteroids years or decades before a potential impact.</p>
+                  <p class="rec-item"><strong>Characterization is Crucial:</strong> Understanding an asteroid's size, mass, composition, and rotation is vital for planning a successful deflection mission.</p>
+                  <p class="rec-item"><strong>International Cooperation:</strong> A credible impact threat is a global challenge that requires coordinated action from space agencies and governments worldwide.</p>
+              </div>
+          </div>
+          <hr class="border-sky-500/20 my-4">
+          <div class="mt-4">
+              <h3 class="text-lg font-semibold text-sky-400">Civil Defense & Public Safety Measures</h3>
+              <div id="publicSafetyInfo" class="mt-3 text-sm muted space-y-2">
+                  <p class="rec-item"><strong>Stay Informed:</strong> Follow instructions from official emergency management agencies.</p>
+                  <p class="rec-item"><strong>Emergency Kit:</strong> Maintain a disaster preparedness kit with water, food, first-aid, and necessary medications.</p>
+                  <p class="rec-item"><strong>Shelter vs. Evacuate:</strong> For distant impacts, evacuation may be ordered. For small airbursts, stay indoors, away from windows.</p>
+                  <p class="rec-item"><strong>Tsunami Risk:</strong> If an ocean impact is predicted, coastal areas may need to evacuate to higher ground.</p>
+              </div>
+          </div>
+          <div id="tailoredRecsContainer" class="mt-5 hidden">
+              <hr class="border-sky-500/20 my-4">
+              <h3 class="text-lg font-semibold text-sky-400">Tailored Recommendations for this Scenario</h3>
+              <div id="recList" class="mt-3 text-sm muted space-y-2"></div>
+          </div>
+        </div>
+      </section>
 
-      <aside class="space-y-6">
-        <div class="card">
-          <h3 class="text-lg font-semibold text-sky-300">Scenario Output</h3>
-          <div id="output" class="mt-3 text-sm muted">
-            <p>Run a simulation to see results here.</p>
-          </div>
-        </div>
+      <aside class="space-y-6">
+        <div class="card">
+          <h3 class="text-lg font-semibold text-sky-300">Scenario Output</h3>
+          <div id="output" class="mt-3 text-sm muted">
+            <p>Run a simulation to see results here.</p>
+          </div>
+        </div>
 
-        <div class="card hidden" id="mitigationOutputCard">
-            <h3 class="text-lg font-semibold text-sky-300">Deflection Results</h3>
-            <div id="mitigationOutput" class="mt-3 text-sm muted">
-                <p>Calculate a deflection to see results here.</p>
-            </div>
-        </div>
+        <div class="card hidden" id="mitigationOutputCard">
+            <h3 class="text-lg font-semibold text-sky-300">Deflection Results</h3>
+            <div id="mitigationOutput" class="mt-3 text-sm muted">
+                <p>Calculate a deflection to see results here.</p>
+            </div>
+        </div>
 
-        <div class="card">
-          <h3 class="text-lg font-semibold text-sky-300">Visualization (schematic)</h3>
-          <canvas id="viz" aria-label="Schematic visualisation"></canvas>
-          <p class="text-xs muted mt-2">Schematic top-down illustration of blast/thermal zones.</p>
-        </div>
-        <div class="card">
-          <h3 class="text-lg font-semibold text-sky-300">Quick Export</h3>
-          <p class="text-sm muted">Download a JSON summary of the scenario and results.</p>
-          <div class="mt-3">
-            <button id="downloadBtn" class="btn">Download JSON</button>
-          </div>
-        </div>
-      </aside>
-    </div>
-  </main>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-sky-300">Visualization (schematic)</h3>
+          <canvas id="viz" aria-label="Schematic visualisation"></canvas>
+          <p class="text-xs muted mt-2">Schematic top-down illustration of blast/thermal zones.</p>
+        </div>
+        <div class="card">
+          <h3 class="text-lg font-semibold text-sky-300">Quick Export</h3>
+          <p class="text-sm muted">Download a JSON summary of the scenario and results.</p>
+          <div class="mt-3">
+            <button id="downloadBtn" class="btn">Download JSON</button>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
 
-  <footer class="max-w-7xl mx-auto px-4 py-6 muted text-sm">
-    <div class="flex items-center justify-between flex-wrap gap-2">
-      <div>Built with public models • Not for operational use</div>
-      <div>NASA Space Apps Challenge 2025</div>
-    </div>
-  </footer>
+  <footer class="max-w-7xl mx-auto px-4 py-6 muted text-sm">
+    <div class="flex items-center justify-between flex-wrap gap-2">
+      <div>Built with public models • Not for operational use</div>
+      <div>NASA Space Apps Challenge 2025</div>
+    </div>
+  </footer>
 
-  <script>
-    // ---------- UTILITY / SCIENTIFIC HELPERS ----------
-    const EARTH_RADIUS_KM = 6371;
-    function sphereVolume(radius_m){ return (4/3) * Math.PI * Math.pow(radius_m,3); }
-    function massFromDiameter(d_m, density){ return density * sphereVolume(d_m/2); }
-    function energyJtoMt(energyJ){ return energyJ / 4.184e15; }
+  <script>
+    // ---------- UTILITY / SCIENTIFIC HELPERS ----------
+    const EARTH_RADIUS_KM = 6371;
+    function sphereVolume(radius_m){ return (4/3) * Math.PI * Math.pow(radius_m,3); }
+    function massFromDiameter(d_m, density){ return density * sphereVolume(d_m/2); }
+    function energyJtoMt(energyJ){ return energyJ / 4.184e15; }
 
-    function likelyAirburst(diameter_m, density, velocity_km_s){
-      if (diameter_m < 25 && density < 4000) return true;
-      if (diameter_m < 40 && density < 6000 && velocity_km_s > 11) return true;
-      return false;
-    }
+    function likelyAirburst(diameter_m, density, velocity_km_s){
+      if (diameter_m < 25 && density < 4000) return true;
+      if (diameter_m < 40 && density < 6000 && velocity_km_s > 11) return true;
+      return false;
+    }
 
-    function effectRadii_km(energyMt){
-      const cbrt = Math.cbrt(Math.max(energyMt, 1e-9));
-      return { 
-          R_5psi_km: 6.2 * cbrt,
-          R_1psi_km: 17 * cbrt,
-          R_thermal3_km: 12 * cbrt
-      };
-    }
+    function effectRadii_km(energyMt){
+      const cbrt = Math.cbrt(Math.max(energyMt, 1e-9));
+      return { 
+          R_5psi_km: 6.2 * cbrt,
+          R_1psi_km: 17 * cbrt,
+          R_thermal3_km: 12 * cbrt
+      };
+    }
 
-    function approxCraterDiameter_km(energyMt){
-      return 1.3 * Math.cbrt(Math.max(energyMt,1e-9));
-    }
+    function approxCraterDiameter_km(energyMt){
+      return 1.3 * Math.cbrt(Math.max(energyMt,1e-9));
+    }
 
-    function estimateCasualties(radii, popDensity){
-      const R5 = radii.R_5psi_km;
-      const R1 = Math.max(radii.R_1psi_km, R5);
-      const Rth = Math.max(radii.R_thermal3_km, R1);
-      const area = (r)=> Math.PI * r * r;
-      const v = { severe: 0.9, moderate: 0.25, thermal: 0.12 };
-      const casualties_severe = area(R5) * popDensity * v.severe;
-      const casualties_moderate = (area(R1) - area(R5)) * popDensity * v.moderate;
-      const casualties_thermal = (area(Rth) - area(R1)) * popDensity * v.thermal;
-      const total = casualties_severe + casualties_moderate + casualties_thermal;
-      return {
-        rings: {
-          severe:{ est_fatalities:Math.round(casualties_severe)},
-          moderate:{ est_fatalities:Math.round(casualties_moderate)},
-          thermal:{ est_fatalities:Math.round(casualties_thermal)}
-        },
-        totalFatalities: Math.round(total)
-      };
-    }
+    function estimateCasualties(radii, popDensity){
+      const R5 = radii.R_5psi_km;
+      const R1 = Math.max(radii.R_1psi_km, R5);
+      const Rth = Math.max(radii.R_thermal3_km, R1);
+      const area = (r)=> Math.PI * r * r;
+      const v = { severe: 0.9, moderate: 0.25, thermal: 0.12 };
+      const casualties_severe = area(R5) * popDensity * v.severe;
+      const casualties_moderate = (area(R1) - area(R5)) * popDensity * v.moderate;
+      const casualties_thermal = (area(Rth) - area(R1)) * popDensity * v.thermal;
+      const total = casualties_severe + casualties_moderate + casualties_thermal;
+      return {
+        rings: {
+          severe:{ est_fatalities:Math.round(casualties_severe)},
+          moderate:{ est_fatalities:Math.round(casualties_moderate)},
+          thermal:{ est_fatalities:Math.round(casualties_thermal)}
+        },
+        totalFatalities: Math.round(total)
+      };
+    }
 
-    function generateRecommendations(scenario) {
-        const { size, leadDays, comp, env, popDensity, totalFatalities } = scenario;
-        const recs = [];
-        if (size < 25) recs.push("<strong>Threat Level: Low.</strong> Likely to disintegrate in atmosphere. Monitor.");
-        else if (size < 140) recs.push("<strong>Threat Level: Regional.</strong> Can cause severe local damage. Deflection highly recommended; else, prioritize evacuation.");
-        else if (size < 1000) recs.push("<strong>Threat Level: Global Potential.</strong> A deflection mission is a global imperative. Consider redundant missions.");
-        else recs.push("<strong>Threat Level: Catastrophic.</strong> Potential extinction-level event. All planetary defense assets must be deployed.");
-        if (leadDays > 1825) recs.push("<strong>Deflection Strategy:</strong> Ample lead time. <strong>Gravity Tractor</strong> or <strong>Kinetic Impactor</strong> are prime candidates.");
-        else if (leadDays > 365) recs.push("<strong>Deflection Strategy:</strong> <strong>Kinetic Impactor</strong> is the most proven technology in this timeframe.");
-        else recs.push("<strong>Deflection Strategy:</strong> Short warning time. A high-velocity <strong>Kinetic Impactor</strong> is the primary option.");
-        if (comp === "metallic") recs.push("<strong>Composition Note:</strong> Metallic bodies are harder to deflect and require more momentum.");
-        if (comp === "icy") recs.push("<strong>Composition Note:</strong> This may be a 'rubble pile.' Risk of fragmentation requires careful deflection.");
-        if (env === 'sea' && size > 30) recs.push("<strong>Civil Defense: Ocean Impact.</strong> Tsunami risk. Coastal regions must be on high alert for evacuation.");
-        if (popDensity > 1000 && totalFatalities > 1000) recs.push("<strong>Civil Defense: High Casualty Risk.</strong> Mass evacuation is critical.");
-        recs.push("<strong>Follow-up Action:</strong> Continuous observation is vital to refine orbit and reduce uncertainties.");
-        return recs;
-    }
+    function generateRecommendations(scenario) {
+        const { size, leadDays, comp, env, popDensity, totalFatalities } = scenario;
+        const recs = [];
+        if (size < 25) recs.push("<strong>Threat Level: Low.</strong> Likely to disintegrate in atmosphere. Monitor.");
+        else if (size < 140) recs.push("<strong>Threat Level: Regional.</strong> Can cause severe local damage. Deflection highly recommended; else, prioritize evacuation.");
+        else if (size < 1000) recs.push("<strong>Threat Level: Global Potential.</strong> A deflection mission is a global imperative. Consider redundant missions.");
+        else recs.push("<strong>Threat Level: Catastrophic.</strong> Potential extinction-level event. All planetary defense assets must be deployed.");
+        if (leadDays > 1825) recs.push("<strong>Deflection Strategy:</strong> Ample lead time. <strong>Gravity Tractor</strong> or <strong>Kinetic Impactor</strong> are prime candidates.");
+        else if (leadDays > 365) recs.push("<strong>Deflection Strategy:</strong> <strong>Kinetic Impactor</strong> is the most proven technology in this timeframe.");
+        else recs.push("<strong>Deflection Strategy:</strong> Short warning time. A high-velocity <strong>Kinetic Impactor</strong> is the primary option.");
+        if (comp === "metallic") recs.push("<strong>Composition Note:</strong> Metallic bodies are harder to deflect and require more momentum.");
+        if (comp === "icy") recs.push("<strong>Composition Note:</strong> This may be a 'rubble pile.' Risk of fragmentation requires careful deflection.");
+        if (env === 'sea' && size > 30) recs.push("<strong>Civil Defense: Ocean Impact.</strong> Tsunami risk. Coastal regions must be on high alert for evacuation.");
+        if (popDensity > 1000 && totalFatalities > 1000) recs.push("<strong>Civil Defense: High Casualty Risk.</strong> Mass evacuation is critical.");
+        recs.push("<strong>Follow-up Action:</strong> Continuous observation is vital to refine orbit and reduce uncertainties.");
+        return recs;
+    }
 
-    // ---------- NEW: DEFLECTION CALCULATION ----------
-    function calculateDeflection() {
-        if (!window.lastScenario) return;
+    // ---------- NEW: DEFLECTION CALCULATION ----------
+    function calculateDeflection() {
+        if (!window.lastScenario) return;
 
-        const asteroidMass = window.lastScenario.results.mass;
-        const leadDays = window.lastScenario.input.leadDays;
+        const asteroidMass = window.lastScenario.results.mass;
+        const leadDays = window.lastScenario.input.leadDays;
 
-        const impactorMass = parseFloat(document.getElementById('impactorMass').value);
-        const impactorVelocity_kms = parseFloat(document.getElementById('impactorVelocity').value);
-        const beta = parseFloat(document.getElementById('betaFactor').value);
+        const impactorMass = parseFloat(document.getElementById('impactorMass').value);
+        const impactorVelocity_kms = parseFloat(document.getElementById('impactorVelocity').value);
+        const beta = parseFloat(document.getElementById('betaFactor').value);
 
-        if (isNaN(impactorMass) || isNaN(impactorVelocity_kms) || isNaN(beta)) {
-            mitigationOutputDiv.innerHTML = `<p>Invalid deflection inputs.</p>`;
-            return;
-        }
+        if (isNaN(impactorMass) || isNaN(impactorVelocity_kms) || isNaN(beta)) {
+            mitigationOutputDiv.innerHTML = `<p>Invalid deflection inputs.</p>`;
+            return;
+        }
 
-        // Physics calculation
-        const impactorVelocity_ms = impactorVelocity_kms * 1000;
-        const momentum_transfer = beta * impactorMass * impactorVelocity_ms;
-        const delta_v_ms = momentum_transfer / asteroidMass; // Change in asteroid velocity in m/s
-        
-        const leadTime_s = leadDays * 24 * 60 * 60;
-        const deflection_m = delta_v_ms * leadTime_s;
-        const deflection_km = deflection_m / 1000;
+        // Physics calculation
+        const impactorVelocity_ms = impactorVelocity_kms * 1000;
+        const momentum_transfer = beta * impactorMass * impactorVelocity_ms;
+        const delta_v_ms = momentum_transfer / asteroidMass; // Change in asteroid velocity in m/s
+        
+        const leadTime_s = leadDays * 24 * 60 * 60;
+        const deflection_m = delta_v_ms * leadTime_s;
+        const deflection_km = deflection_m / 1000;
 
-        // Display results
-        const success = deflection_km > EARTH_RADIUS_KM;
-        const html = [];
-        html.push(`<div class="space-y-2">`);
-        html.push(`<div><strong>Velocity Change (Δv):</strong> ${(delta_v_ms * 1000).toFixed(4)} mm/s</div>`);
-        html.push(`<div><strong>Total Deflection Distance:</strong> ${deflection_km.toLocaleString(undefined, {maximumFractionDigits:0})} km</div>`);
-        html.push(`<hr class="border-sky-500/20 my-2">`);
-        if(success) {
-            html.push(`<div class="font-bold text-green-400">STATUS: SUCCESS</div>`);
-            html.push(`<div class="text-xs">The asteroid is predicted to miss Earth by approximately ${Math.round(deflection_km - EARTH_RADIUS_KM).toLocaleString()} km.</div>`);
-        } else {
-            html.push(`<div class="font-bold text-red-400">STATUS: FAILURE</div>`);
-            html.push(`<div class="text-xs">The deflection of ${Math.round(deflection_km).toLocaleString()} km is not enough to avoid an impact. Earth's radius is ${EARTH_RADIUS_KM.toLocaleString()} km.</div>`);
-        }
-        html.push(`</div>`);
-        
-        mitigationOutputCard.classList.remove('hidden');
-        mitigationOutputDiv.innerHTML = html.join('');
-    }
+        // Display results
+        const success = deflection_km > EARTH_RADIUS_KM;
+        const html = [];
+        html.push(`<div class="space-y-2">`);
+        html.push(`<div><strong>Velocity Change (Δv):</strong> ${(delta_v_ms * 1000).toFixed(4)} mm/s</div>`);
+        html.push(`<div><strong>Total Deflection Distance:</strong> ${deflection_km.toLocaleString(undefined, {maximumFractionDigits:0})} km</div>`);
+        html.push(`<hr class="border-sky-500/20 my-2">`);
+        if(success) {
+            html.push(`<div class="font-bold text-green-400">STATUS: SUCCESS</div>`);
+            html.push(`<div class="text-xs">The asteroid is predicted to miss Earth by approximately ${Math.round(deflection_km - EARTH_RADIUS_KM).toLocaleString()} km.</div>`);
+        } else {
+            html.push(`<div class="font-bold text-red-400">STATUS: FAILURE</div>`);
+            html.push(`<div class="text-xs">The deflection of ${Math.round(deflection_km).toLocaleString()} km is not enough to avoid an impact. Earth's radius is ${EARTH_RADIUS_KM.toLocaleString()} km.</div>`);
+        }
+        html.push(`</div>`);
+        
+        mitigationOutputCard.classList.remove('hidden');
+        mitigationOutputDiv.innerHTML = html.join('');
+    }
 
-    // ---------- UI WIRING ----------
-    const simulateBtn = document.getElementById('simulateBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const outputDiv = document.getElementById('output');
-    const recListDiv = document.getElementById('recList');
-    const tailoredRecsContainer = document.getElementById('tailoredRecsContainer');
-    const viz = document.getElementById('viz');
-    const downloadBtn = document.getElementById('downloadBtn');
-    
-    // New mitigation elements
-    const mitigationMethodSelect = document.getElementById('mitigationMethod');
-    const kineticImpactorParamsDiv = document.getElementById('kineticImpactorParams');
-    const runMitigationBtn = document.getElementById('runMitigationBtn');
-    const mitigationOutputCard = document.getElementById('mitigationOutputCard');
-    const mitigationOutputDiv = document.getElementById('mitigationOutput');
+    // ---------- UI WIRING ----------
+    const simulateBtn = document.getElementById('simulateBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const outputDiv = document.getElementById('output');
+    const recListDiv = document.getElementById('recList');
+    const tailoredRecsContainer = document.getElementById('tailoredRecsContainer');
+    const viz = document.getElementById('viz');
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    // New mitigation elements
+    const mitigationMethodSelect = document.getElementById('mitigationMethod');
+    const kineticImpactorParamsDiv = document.getElementById('kineticImpactorParams');
+    const runMitigationBtn = document.getElementById('runMitigationBtn');
+    const mitigationOutputCard = document.getElementById('mitigationOutputCard');
+    const mitigationOutputDiv = document.getElementById('mitigationOutput');
 
-    function drawViz(radii){
-      const ctx = viz.getContext('2d');
-      const dpr = window.devicePixelRatio || 1;
-      const w = viz.clientWidth;
-      const h = viz.clientHeight;
-      viz.width = Math.round(w * dpr);
-      viz.height = Math.round(h * dpr);
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      ctx.clearRect(0,0,w,h);
-      const cx = w/2, cy = h/2;
-      const maxR = Math.max(radii.R_thermal3_km, radii.R_1psi_km, radii.R_5psi_km, 1);
-      const margin = 20;
-      const scale = (Math.min(w,h)/2 - margin) / (maxR || 1);
-      ctx.save();
-      ctx.fillStyle = '#ff8a3d'; ctx.globalAlpha = 0.06;
-      ctx.beginPath(); ctx.arc(cx,cy, radii.R_thermal3_km * scale, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#ffcf85'; ctx.globalAlpha = 0.08;
-      ctx.beginPath(); ctx.arc(cx,cy, radii.R_1psi_km * scale, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = '#ff5b5b'; ctx.globalAlpha = 0.12;
-      ctx.beginPath(); ctx.arc(cx,cy, radii.R_5psi_km * scale, 0, Math.PI*2); ctx.fill();
-      ctx.restore();
-      ctx.font = '13px Inter, Arial';
-      ctx.fillStyle = '#cfefff'; ctx.fillText('Center (impact)', cx + 6, cy + 6);
-      ctx.fillStyle = '#ffd3b8'; ctx.fillText(`Thermal ≈ ${radii.R_thermal3_km.toFixed(2)} km`, 10, 18);
-      ctx.fillStyle = '#cfefff'; ctx.fillText(`1 psi ≈ ${radii.R_1psi_km.toFixed(2)} km`, 10, 36);
-      ctx.fillStyle = '#ffd9d9'; ctx.fillText(`5 psi ≈ ${radii.R_5psi_km.toFixed(2)} km`, 10, 54);
-    }
+    function drawViz(radii){
+      const ctx = viz.getContext('2d');
+      const dpr = window.devicePixelRatio || 1;
+      const w = viz.clientWidth;
+      const h = viz.clientHeight;
+      viz.width = Math.round(w * dpr);
+      viz.height = Math.round(h * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      ctx.clearRect(0,0,w,h);
+      const cx = w/2, cy = h/2;
+      const maxR = Math.max(radii.R_thermal3_km, radii.R_1psi_km, radii.R_5psi_km, 1);
+      const margin = 20;
+      const scale = (Math.min(w,h)/2 - margin) / (maxR || 1);
+      ctx.save();
+      ctx.fillStyle = '#ff8a3d'; ctx.globalAlpha = 0.06;
+      ctx.beginPath(); ctx.arc(cx,cy, radii.R_thermal3_km * scale, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffcf85'; ctx.globalAlpha = 0.08;
+      ctx.beginPath(); ctx.arc(cx,cy, radii.R_1psi_km * scale, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ff5b5b'; ctx.globalAlpha = 0.12;
+      ctx.beginPath(); ctx.arc(cx,cy, radii.R_5psi_km * scale, 0, Math.PI*2); ctx.fill();
+      ctx.restore();
+      ctx.font = '13px Inter, Arial';
+      ctx.fillStyle = '#cfefff'; ctx.fillText('Center (impact)', cx + 6, cy + 6);
+      ctx.fillStyle = '#ffd3b8'; ctx.fillText(`Thermal ≈ ${radii.R_thermal3_km.toFixed(2)} km`, 10, 18);
+      ctx.fillStyle = '#cfefff'; ctx.fillText(`1 psi ≈ ${radii.R_1psi_km.toFixed(2)} km`, 10, 36);
+      ctx.fillStyle = '#ffd9d9'; ctx.fillText(`5 psi ≈ ${radii.R_5psi_km.toFixed(2)} km`, 10, 54);
+    }
 
-    function formatNumber(n){
-      if (n === null || n === undefined) return '—';
-      if (n >= 1e9) return (n/1e9).toFixed(2)+'B';
-      if (n >= 1e6) return (n/1e6).toFixed(2)+'M';
-      if (n >= 1e3) return (n/1e3).toFixed(2)+'k';
-      return Math.round(n);
-    }
+    function formatNumber(n){
+      if (n === null || n === undefined) return '—';
+      if (n >= 1e9) return (n/1e9).toFixed(2)+'B';
+      if (n >= 1e6) return (n/1e6).toFixed(2)+'M';
+      if (n >= 1e3) return (n/1e3).toFixed(2)+'k';
+      return Math.round(n);
+    }
 
-    simulateBtn.addEventListener('click', ()=>{
-      // 1. Gather Inputs
-      const size = parseFloat(document.getElementById('size').value);
-      const velocity = parseFloat(document.getElementById('velocity').value);
-      const compSelect = document.getElementById('composition');
-      const comp = compSelect.value;
-      const density = parseFloat(compSelect.selectedOptions[0].dataset.density);
-      const angle = parseFloat(document.getElementById('angle').value);
-      const leadDays = parseFloat(document.getElementById('leadTime').value);
-      const env = document.getElementById('environment').value;
-      const popDensity = Math.max(0, parseFloat(document.getElementById('popDensity').value) || 0);
-      const locationName = document.getElementById('locationName').value || 'unnamed area';
+    simulateBtn.addEventListener('click', ()=>{
+      // 1. Gather Inputs
+      const size = parseFloat(document.getElementById('size').value);
+      const velocity = parseFloat(document.getElementById('velocity').value);
+      const compSelect = document.getElementById('composition');
+      const comp = compSelect.value;
+      const density = parseFloat(compSelect.selectedOptions[0].dataset.density);
+      const angle = parseFloat(document.getElementById('angle').value);
+      const leadDays = parseFloat(document.getElementById('leadTime').value);
+      const env = document.getElementById('environment').value;
+      const popDensity = Math.max(0, parseFloat(document.getElementById('popDensity').value) || 0);
+      const locationName = document.getElementById('locationName').value || 'unnamed area';
 
-      if (isNaN(size) || isNaN(velocity) || isNaN(density) || isNaN(angle) || isNaN(leadDays)){
-        outputDiv.innerHTML = `<p class="muted">Please provide valid numeric inputs.</p>`;
-        return;
-      }
+      if (isNaN(size) || isNaN(velocity) || isNaN(density) || isNaN(angle) || isNaN(leadDays)){
+        outputDiv.innerHTML = `<p class="muted">Please provide valid numeric inputs.</p>`;
+        return;
+      }
 
-      // 2. Run Calculations
-      const mass = massFromDiameter(size, density);
-      const v_m_s = velocity * 1000;
-      const energyJ = 0.5 * mass * v_m_s * v_m_s;
-      const energyMt = energyJtoMt(energyJ);
-      const airburst = likelyAirburst(size, density, velocity);
-      const radii = effectRadii_km(energyMt);
-      const casualties = estimateCasualties(radii, popDensity);
-      const crater_km = airburst ? 0 : approxCraterDiameter_km(energyMt);
+      // 2. Run Calculations
+      const mass = massFromDiameter(size, density);
+      const v_m_s = velocity * 1000;
+      const energyJ = 0.5 * mass * v_m_s * v_m_s;
+      const energyMt = energyJtoMt(energyJ);
+      const airburst = likelyAirburst(size, density, velocity);
+      const radii = effectRadii_km(energyMt);
+      const casualties = estimateCasualties(radii, popDensity);
+      const crater_km = airburst ? 0 : approxCraterDiameter_km(energyMt);
 
-      // 3. Build Output HTML
-      const html = [];
-      html.push(`<div><strong>Scenario:</strong> ${size} m ${comp} body at ${velocity} km/s impacting ${env} near <em>${locationName}</em>.</div>`);
-      html.push(`<div class="mt-2"><strong>Mass:</strong> ${mass.toLocaleString(undefined, {maximumFractionDigits:0})} kg &nbsp; • &nbsp; <strong>Energy:</strong> ${energyJ.toExponential(3)} J (~${energyMt.toFixed(4)} Mt TNT)</div>`);
-      html.push(`<div class="mt-3"><strong>Impact mode:</strong> ${airburst ? '<span style="color:#ffd28f">Likely airburst</span>' : '<span style="color:#b6ffb1">Surface impact</span>'}</div>`);
-      html.push(`<div class="mt-3"><strong>Estimated effect radii:</strong><ul class="mt-1 ml-5 list-disc">`);
-      html.push(`<li>Severe damage (≈5 psi): ${radii.R_5psi_km.toFixed(2)} km</li>`);
-      html.push(`<li>Moderate damage (≈1 psi): ${radii.R_1psi_km.toFixed(2)} km</li>`);
-      html.push(`<li>Intense thermal (3rd° burn): ${radii.R_thermal3_km.toFixed(2)} km</li>`);
-      if (!airburst) html.push(`<li>Approx. crater diameter: ${crater_km.toFixed(2)} km</li>`);
-      html.push(`</ul></div>`);
-      html.push(`<div class="mt-3"><strong>Approx. casualties:</strong> <div class="mt-1 ml-3">`);
-      html.push(`<div>Severe zone (to ${radii.R_5psi_km.toFixed(2)} km): ${formatNumber(casualties.rings.severe.est_fatalities)} fatalities</div>`);
-      html.push(`<div>Moderate zone (to ${radii.R_1psi_km.toFixed(2)} km): ${formatNumber(casualties.rings.moderate.est_fatalities)} fatalities</div>`);
-      html.push(`<div>Thermal zone (to ${radii.R_thermal3_km.toFixed(2)} km): ${formatNumber(casualties.rings.thermal.est_fatalities)} fatalities</div>`);
-      html.push(`<div class="mt-2"><strong>Estimated total fatalities:</strong> ${formatNumber(casualties.totalFatalities)}</div>`);
-      html.push(`</div></div>`);
-      outputDiv.innerHTML = html.join('');
+      // 3. Build Output HTML
+      const html = [];
+      html.push(`<div><strong>Scenario:</strong> ${size} m ${comp} body at ${velocity} km/s impacting ${env} near <em>${locationName}</em>.</div>`);
+      html.push(`<div class="mt-2"><strong>Mass:</strong> ${mass.toLocaleString(undefined, {maximumFractionDigits:0})} kg &nbsp; • &nbsp; <strong>Energy:</strong> ${energyJ.toExponential(3)} J (~${energyMt.toFixed(4)} Mt TNT)</div>`);
+      html.push(`<div class="mt-3"><strong>Impact mode:</strong> ${airburst ? '<span style="color:#ffd28f">Likely airburst</span>' : '<span style="color:#b6ffb1">Surface impact</span>'}</div>`);
+      html.push(`<div class="mt-3"><strong>Estimated effect radii:</strong><ul class="mt-1 ml-5 list-disc">`);
+      html.push(`<li>Severe damage (≈5 psi): ${radii.R_5psi_km.toFixed(2)} km</li>`);
+      html.push(`<li>Moderate damage (≈1 psi): ${radii.R_1psi_km.toFixed(2)} km</li>`);
+      html.push(`<li>Intense thermal (3rd° burn): ${radii.R_thermal3_km.toFixed(2)} km</li>`);
+      if (!airburst) html.push(`<li>Approx. crater diameter: ${crater_km.toFixed(2)} km</li>`);
+      html.push(`</ul></div>`);
+      html.push(`<div class="mt-3"><strong>Approx. casualties:</strong> <div class="mt-1 ml-3">`);
+      html.push(`<div>Severe zone (to ${radii.R_5psi_km.toFixed(2)} km): ${formatNumber(casualties.rings.severe.est_fatalities)} fatalities</div>`);
+      html.push(`<div>Moderate zone (to ${radii.R_1psi_km.toFixed(2)} km): ${formatNumber(casualties.rings.moderate.est_fatalities)} fatalities</div>`);
+      html.push(`<div>Thermal zone (to ${radii.R_thermal3_km.toFixed(2)} km): ${formatNumber(casualties.rings.thermal.est_fatalities)} fatalities</div>`);
+      html.push(`<div class="mt-2"><strong>Estimated total fatalities:</strong> ${formatNumber(casualties.totalFatalities)}</div>`);
+      html.push(`</div></div>`);
+      outputDiv.innerHTML = html.join('');
 
-      // 4. Generate & Display Recommendations
-      const scenarioData = { size, leadDays, comp, env, popDensity, totalFatalities: casualties.totalFatalities };
-      const recs = generateRecommendations(scenarioData);
-      recListDiv.innerHTML = recs.map(r => `<div class="rec-item">${r}</div>`).join('');
-      tailoredRecsContainer.classList.remove('hidden');
+      // 4. Generate & Display Recommendations
+      const scenarioData = { size, leadDays, comp, env, popDensity, totalFatalities: casualties.totalFatalities };
+      const recs = generateRecommendations(scenarioData);
+      recListDiv.innerHTML = recs.map(r => `<div class="rec-item">${r}</div>`).join('');
+      tailoredRecsContainer.classList.remove('hidden');
 
-      // 5. Draw Visualization
-      drawViz(radii);
+      // 5. Draw Visualization
+      drawViz(radii);
 
-      // 6. Store Scenario for Download & Enable Mitigation
-      window.lastScenario = {
-        input:{size, velocity, comp, density, angle, leadDays, env, popDensity, locationName},
-        results:{mass, energyJ, energyMt, airburst, radii, casualties, crater_km}
-      };
-      mitigationMethodSelect.disabled = false;
-      runMitigationBtn.disabled = false;
-    });
+      // 6. Store Scenario for Download & Enable Mitigation
+      window.lastScenario = {
+        input:{size, velocity, comp, density, angle, leadDays, env, popDensity, locationName},
+        results:{mass, energyJ, energyMt, airburst, radii, casualties, crater_km}
+      };
+      mitigationMethodSelect.disabled = false;
+      runMitigationBtn.disabled = false;
+    });
 
-    resetBtn.addEventListener('click', ()=>{
-      document.getElementById('size').value = 140;
-      document.getElementById('velocity').value = 25;
-      document.getElementById('composition').value = 'rocky';
-      document.getElementById('angle').value = 45;
-      document.getElementById('leadTime').value = 1825;
-      document.getElementById('environment').value = 'land';
-      document.getElementById('popDensity').value = 1500;
-      document.getElementById('locationName').value = '';
-      outputDiv.innerHTML = `<p class="muted">Run a simulation to see results here.</p>`;
-      recListDiv.innerHTML = '';
-      tailoredRecsContainer.classList.add('hidden');
-      const ctx = viz.getContext('2d'); ctx.clearRect(0,0,viz.width,viz.height);
-      window.lastScenario = null;
-      // Reset and disable mitigation UI
-      mitigationMethodSelect.value = 'none';
-      mitigationMethodSelect.disabled = true;
-      kineticImpactorParamsDiv.classList.add('hidden');
-      runMitigationBtn.disabled = true;
-      mitigationOutputCard.classList.add('hidden');
-      mitigationOutputDiv.innerHTML = '<p>Calculate a deflection to see results here.</p>';
-    });
+    resetBtn.addEventListener('click', ()=>{
+      document.getElementById('size').value = 140;
+      document.getElementById('velocity').value = 25;
+      document.getElementById('composition').value = 'rocky';
+      document.getElementById('angle').value = 45;
+      document.getElementById('leadTime').value = 1825;
+      document.getElementById('environment').value = 'land';
+      document.getElementById('popDensity').value = 1500;
+      document.getElementById('locationName').value = '';
+      outputDiv.innerHTML = `<p class="muted">Run a simulation to see results here.</p>`;
+      recListDiv.innerHTML = '';
+      tailoredRecsContainer.classList.add('hidden');
+      const ctx = viz.getContext('2d'); ctx.clearRect(0,0,viz.width,viz.height);
+      window.lastScenario = null;
+      // Reset and disable mitigation UI
+      mitigationMethodSelect.value = 'none';
+      mitigationMethodSelect.disabled = true;
+      kineticImpactorParamsDiv.classList.add('hidden');
+      runMitigationBtn.disabled = true;
+      mitigationOutputCard.classList.add('hidden');
+      mitigationOutputDiv.innerHTML = '<p>Calculate a deflection to see results here.</p>';
+    });
 
-    downloadBtn.addEventListener('click', ()=>{
-      if (!window.lastScenario){
-        alert('No scenario available — run an analysis first.');
-        return;
-      }
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.lastScenario, null, 2));
-      const dl = document.createElement('a');
-      dl.setAttribute('href', dataStr);
-      dl.setAttribute('download', 'impact_scenario.json');
-      document.body.appendChild(dl);
-      dl.click();
-      dl.remove();
-    });
+    downloadBtn.addEventListener('click', ()=>{
+      if (!window.lastScenario){
+        alert('No scenario available — run an analysis first.');
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(window.lastScenario, null, 2));
+      const dl = document.createElement('a');
+      dl.setAttribute('href', dataStr);
+      dl.setAttribute('download', 'impact_scenario.json');
+      document.body.appendChild(dl);
+      dl.click();
+      dl.remove();
+    });
 
-    // NEW: Mitigation UI listeners
-    mitigationMethodSelect.addEventListener('change', () => {
-        if (mitigationMethodSelect.value === 'kineticImpactor') {
-            kineticImpactorParamsDiv.classList.remove('hidden');
-        } else {
-            kineticImpactorParamsDiv.classList.add('hidden');
-        }
-    });
+    // NEW: Mitigation UI listeners
+    mitigationMethodSelect.addEventListener('change', () => {
+        if (mitigationMethodSelect.value === 'kineticImpactor') {
+            kineticImpactorParamsDiv.classList.remove('hidden');
+        } else {
+            kineticImpactorParamsDiv.classList.add('hidden');
+        }
+    });
 
-    runMitigationBtn.addEventListener('click', calculateDeflection);
+    runMitigationBtn.addEventListener('click', calculateDeflection);
 
-    // init
-    (function init(){ const ctx = viz.getContext('2d'); ctx.clearRect(0,0,viz.width,viz.height); })();
-  </script>
+    // init
+    (function init(){ const ctx = viz.getContext('2d'); ctx.clearRect(0,0,viz.width,viz.height); })();
+  </script>
 </body>
-
 </html>
-
-
